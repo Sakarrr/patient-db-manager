@@ -11,6 +11,7 @@ const PatientManager = () => {
   const [address, setAddress] = useState("");
   const [mobile, setMobile] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
+  const [fbs, setFBS] = useState("")
   const [search, setSearch] = useState("");
 
   // Load patients on startup
@@ -27,7 +28,7 @@ const PatientManager = () => {
   const addPatient = async () => {
     if (!name || !dob || !age || !gender  || !citizenship || !address || !mobile || !bloodGroup) return alert("Please fill all fields!");
 
-    await db.patients.add({ name, dob, gender, age, citizenship, address, mobile, bloodGroup });
+    await db.patients.add({ name, dob, gender, age, citizenship, address, mobile, bloodGroup, fbs });
     setPatients(await db.patients.toArray());
 
     // Clear form
@@ -119,6 +120,11 @@ const PatientManager = () => {
           <input value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)} type="text" placeholder="Blood Group" name="bloodGroup" />
         </div>
       </div>
+
+      <div className="patient-test-results">
+      <label for="fbs">Blood Group</label>
+      <input value={fbs} onChange={(e) => setFBS(e.target.value)} type="text" placeholder="FBS" name="fbs" />
+      </div>
      
       <button onClick={addPatient}>Add Patient</button>
 
@@ -136,19 +142,30 @@ const PatientManager = () => {
           <th>Address</th>
           <th>Mobile</th>
           <th>Blood Group</th>
+          <th>FBS</th>
         </tr>
-        {filteredPatients.map((p) => (
-          <tr key={p.id}>
-            <td>{p.name}</td>
-            <td>{p.dob}</td>
-            <td>{p.gender}</td>
-            <td>{p.age}</td>
-            <td>{p.citizenship}</td>
-            <td>{p.address}</td>
-            <td>{p.mobile}</td>
-            <td>{p.bloodGroup}</td>
-          </tr>
-        ))}
+        {filteredPatients.map((p) =>{
+          let fbsValue = Number(p.fbs); // Convert to number
+          let bgColor = "";
+    
+          if (fbsValue >= 1 && fbsValue <= 33) bgColor = "red";
+          else if (fbsValue >= 34 && fbsValue <= 66) bgColor = "yellow";
+          else if (fbsValue >= 67 && fbsValue <= 100) bgColor = "green";
+
+          return  (
+            <tr key={p.id}>
+              <td>{p.name}</td>
+              <td>{p.dob}</td>
+              <td>{p.gender}</td>
+              <td>{p.age}</td>
+              <td>{p.citizenship}</td>
+              <td>{p.address}</td>
+              <td>{p.mobile}</td>
+              <td>{p.bloodGroup}</td>
+              <td style={{ backgroundColor: bgColor }}>{p.fbs}</td>
+            </tr>
+          )
+        })}
       </table>
 
       <button onClick={exportData}>Export Data</button> <br/>
