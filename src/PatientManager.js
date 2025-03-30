@@ -16,8 +16,21 @@ const PatientManager = () => {
     mobile: "",
     bloodGroup: "",
     fbs: "",
+    sgpt: "",
+    sgot: "",
+    cholesterol: "",
+    tg: "",
+    creatinine: "",
+    uricAcid: "",
+    breathometer: "",
+    ecg: "",
   });
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState({
+    name: "",
+    dob: "",
+    citizenship: "",
+    mobile: "",
+  });
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -80,6 +93,14 @@ const PatientManager = () => {
       mobile: "",
       bloodGroup: "",
       fbs: "",
+      sgpt: "",
+      sgot: "",
+      cholesterol: "",
+      tg: "",
+      creatinine: "",
+      uricAcid: "",
+      breathometer: "",
+      ecg: "",
     });
   };
 
@@ -128,8 +149,12 @@ const PatientManager = () => {
     }
   };
 
-  const filteredPatients = patients.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+  const filteredPatients = patients.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.name.toLowerCase()) &&
+      p.dob.toLowerCase().includes(search.dob.toLowerCase()) &&
+      p.citizenship.toLowerCase().includes(search.citizenship.toLowerCase()) &&
+      p.mobile.toLowerCase().includes(search.mobile.toLowerCase())
   );
 
   return (
@@ -145,7 +170,7 @@ const PatientManager = () => {
             <input
               value={formData[key]}
               onChange={handleChange}
-              type={"text"}
+              type="text"
               name={key}
               className={key}
               placeholder={`Enter ${
@@ -166,11 +191,31 @@ const PatientManager = () => {
       </div>
       <div className="patient-list-header">
         <h3>Patient List</h3>
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search patient by Name"
-        />
+        <div className="patient-list-header">
+          <h3>Patient List</h3>
+          <input
+            value={search.name}
+            onChange={(e) => setSearch({ ...search, name: e.target.value })}
+            placeholder="Search by Name"
+          />
+          <input
+            value={search.dob}
+            onChange={(e) => setSearch({ ...search, dob: e.target.value })}
+            placeholder="Search by DOB"
+          />
+          <input
+            value={search.citizenship}
+            onChange={(e) =>
+              setSearch({ ...search, citizenship: e.target.value })
+            }
+            placeholder="Search by Citizenship"
+          />
+          <input
+            value={search.mobile}
+            onChange={(e) => setSearch({ ...search, mobile: e.target.value })}
+            placeholder="Search by Mobile"
+          />
+        </div>
       </div>
       <table>
         <thead>
@@ -188,12 +233,22 @@ const PatientManager = () => {
                 <td
                   key={key}
                   style={
-                    key === "fbs"
+                    [
+                      "fbs",
+                      "sgpt",
+                      "sgot",
+                      "cholesterol",
+                      "tg",
+                      "creatinine",
+                      "uricAcid",
+                      "breathometer",
+                      "ecg",
+                    ].includes(key)
                       ? {
                           backgroundColor:
-                            p.fbs < 34
+                            p[key] < 34
                               ? "red"
-                              : p.fbs < 67
+                              : p[key] < 67
                               ? "yellow"
                               : "green",
                         }
