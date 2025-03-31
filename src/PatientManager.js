@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import db from "./database";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import html2canvas from "html2canvas";
 
 const PatientManager = () => {
   const [patients, setPatients] = useState([]);
