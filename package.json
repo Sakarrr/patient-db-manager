@@ -1,6 +1,6 @@
 {
   "name": "patient-records",
-  "homepage": "https://sakarrr.github.io/patient-db-manager/",
+  "homepage": "https://sakarrr.github.io/patient-records/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
