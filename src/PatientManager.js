@@ -48,21 +48,13 @@ const PatientManager = () => {
     doc.setFontSize(18);
     doc.text("Patient Details", 14, 15);
 
-    // Exclude the `id` field
     const fieldsToInclude = Object.keys(patient).filter((key) => key !== "id");
-
-    // Table Headers
     const headers = ["Field", "Value"];
 
-    // Prepare Data for Table
     const data = fieldsToInclude.map((key) => {
-      return [
-        key.charAt(0).toUpperCase() + key.slice(1), // Capitalized field name
-        patient[key], // Value
-      ];
+      return [key.charAt(0).toUpperCase() + key.slice(1), patient[key]];
     });
 
-    // Add Table with Conditional Formatting
     autoTable(doc, {
       startY: 25,
       head: [headers],
@@ -71,39 +63,55 @@ const PatientManager = () => {
       theme: "grid",
       didParseCell: (data) => {
         if (data.column.index === 1) {
-          // Only apply color to the "Value" column
           const fieldName = data.row.raw[0].toLowerCase();
           const value = parseFloat(data.row.raw[1]);
 
-          if (
-            [
-              "fbs",
-              "sgpt",
-              "sgot",
-              "cholesterol",
-              "tg",
-              "creatinine",
-              "uricacid",
-              "breathometer",
-              "ecg",
-            ].includes(fieldName)
-          ) {
-            if (value < 34) {
-              data.cell.styles.fillColor = [255, 0, 0]; // Red background
-              data.cell.styles.textColor = [255, 255, 255]; // White text
-            } else if (value < 67) {
-              data.cell.styles.fillColor = [255, 255, 0]; // Yellow background
-              data.cell.styles.textColor = [0, 0, 0]; // Black text
-            } else {
-              data.cell.styles.fillColor = [0, 255, 0]; // Green background
-              data.cell.styles.textColor = [0, 0, 0]; // Black text
+          if (!isNaN(value)) {
+            let fillColor = null;
+            let textColor = [0, 0, 0];
+
+            if (fieldName === "tg") {
+              if (value <= 150) {
+                fillColor = [0, 128, 0];
+                textColor = [255, 255, 255]; // Green
+              } else if (value <= 199) {
+                fillColor = [255, 255, 0]; // Yellow
+                textColor = [0, 0, 0];
+              } else {
+                fillColor = [255, 0, 0];
+                textColor = [255, 255, 255]; // Red
+              }
+            } else if (fieldName === "cholesterol") {
+              if (value <= 200) {
+                fillColor = [0, 128, 0];
+                textColor = [255, 255, 255]; // Green
+              } else if (value <= 239) {
+                fillColor = [255, 255, 0];
+                textColor = [0, 0, 0]; // Yellow
+              } else {
+                fillColor = [255, 0, 0];
+                textColor = [255, 255, 255]; // Red
+              }
+            } else if (testRanges[fieldName]) {
+              const { min, max } = testRanges[fieldName];
+              if (value < min || value > max) {
+                fillColor = [255, 0, 0]; // Red
+                textColor = [255, 255, 255];
+              } else {
+                fillColor = [0, 128, 0]; // Green
+                textColor = [255, 255, 255];
+              }
+            }
+
+            if (fillColor) {
+              data.cell.styles.fillColor = fillColor;
+              data.cell.styles.textColor = textColor;
             }
           }
         }
       },
     });
 
-    // Footer
     doc.setFontSize(10);
     doc.setTextColor(150);
     doc.text(
@@ -118,7 +126,6 @@ const PatientManager = () => {
       doc.internal.pageSize.height - 15
     );
 
-    // Save PDF
     doc.save(`${patient.name}_details.pdf`);
   };
 
@@ -293,21 +300,43 @@ const PatientManager = () => {
               {Object.keys(formData).map((key) => (
                 <td
                   key={key}
-                  style={
-                    testRanges[key]
-                      ? {
-                          backgroundColor: (() => {
-                            const value = parseFloat(p[key]);
-                            const { min, max } = testRanges[key];
+                  style={{
+                    ...(testRanges[key] &&
+                      (() => {
+                        const value = parseFloat(p[key]);
+                        if (isNaN(value)) return {};
 
-                            if (isNaN(value)) return "transparent";
-                            if (value < min || value > max) return "red";
-                            return "green";
-                          })(),
-                          color: "white",
+                        if (key === "tg") {
+                          if (value <= 150) {
+                            return { backgroundColor: "green", color: "white" };
+                          } else if (value <= 199) {
+                            return {
+                              backgroundColor: "yellow",
+                              color: "black",
+                            };
+                          } else {
+                            return { backgroundColor: "red", color: "white" };
+                          }
+                        } else if (key === "cholesterol") {
+                          if (value <= 200) {
+                            return { backgroundColor: "green", color: "white" };
+                          } else if (value <= 239) {
+                            return {
+                              backgroundColor: "yellow",
+                              color: "black",
+                            };
+                          } else {
+                            return { backgroundColor: "red", color: "white" };
+                          }
+                        } else {
+                          const { min, max } = testRanges[key];
+                          if (value < min || value > max) {
+                            return { backgroundColor: "red", color: "white" };
+                          }
+                          return { backgroundColor: "green", color: "white" };
                         }
-                      : {}
-                  }
+                      })()),
+                  }}
                 >
                   {p[key]}
                 </td>
