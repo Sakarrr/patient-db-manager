@@ -208,6 +208,16 @@ const PatientManager = () => {
       p.mobile.toLowerCase().includes(search.mobile.toLowerCase())
   );
 
+  const testRanges = {
+    fbs: { min: 70, max: 100 },
+    sgpt: { min: 0, max: 40 },
+    sgot: { min: 0, max: 40 },
+    cholesterol: { min: 200, max: 240 },
+    tg: { min: 100, max: 200 },
+    creatinine: { min: 0.7, max: 1.3 },
+    uricAcid: { min: 2, max: 7 },
+  };
+
   return (
     <div className="app-wrapper">
       <h1>Offline Patient Records</h1>
@@ -284,24 +294,17 @@ const PatientManager = () => {
                 <td
                   key={key}
                   style={
-                    [
-                      "fbs",
-                      "sgpt",
-                      "sgot",
-                      "cholesterol",
-                      "tg",
-                      "creatinine",
-                      "uricAcid",
-                      "breathometer",
-                      "ecg",
-                    ].includes(key)
+                    testRanges[key]
                       ? {
-                          backgroundColor:
-                            p[key] < 34
-                              ? "red"
-                              : p[key] < 67
-                              ? "yellow"
-                              : "green",
+                          backgroundColor: (() => {
+                            const value = parseFloat(p[key]);
+                            const { min, max } = testRanges[key];
+
+                            if (isNaN(value)) return "transparent";
+                            if (value < min || value > max) return "red";
+                            return "green";
+                          })(),
+                          color: "white",
                         }
                       : {}
                   }
