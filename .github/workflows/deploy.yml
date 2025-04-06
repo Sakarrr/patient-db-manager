@@ -5,34 +5,32 @@ on:
     branches:
       - main  # or 'master', depending on your default branch
 
+permissions:
+  contents: write  # ✅ Gives GITHUB_TOKEN permission to push to gh-pages
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Adjust this to the Node.js version you are using
+          node-version: '16'
 
-      # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Build the React app
       - name: Build React app
         run: npm run build
 
-      # Deploy to GitHub Pages using gh-pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # The branch GitHub Pages uses to serve the site
-          folder: build     # The folder to deploy (the build folder)
+          branch: gh-pages  # Branch to push the built files
+          folder: build     # Folder to deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Uses the built-in GitHub Actions token
