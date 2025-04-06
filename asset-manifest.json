@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/patient-db-manager/static/css/main.8e96e44f.css",
-    "main.js": "/patient-db-manager/static/js/main.86ee3927.js",
+    "main.js": "/patient-db-manager/static/js/main.9f7d682d.js",
     "static/js/239.ef16f0bb.chunk.js": "/patient-db-manager/static/js/239.ef16f0bb.chunk.js",
     "static/js/977.f80fd815.chunk.js": "/patient-db-manager/static/js/977.f80fd815.chunk.js",
     "static/js/732.9f97c7f5.chunk.js": "/patient-db-manager/static/js/732.9f97c7f5.chunk.js",
     "static/js/453.8932bc4e.chunk.js": "/patient-db-manager/static/js/453.8932bc4e.chunk.js",
     "index.html": "/patient-db-manager/index.html",
     "main.8e96e44f.css.map": "/patient-db-manager/static/css/main.8e96e44f.css.map",
-    "main.86ee3927.js.map": "/patient-db-manager/static/js/main.86ee3927.js.map",
+    "main.9f7d682d.js.map": "/patient-db-manager/static/js/main.9f7d682d.js.map",
     "239.ef16f0bb.chunk.js.map": "/patient-db-manager/static/js/239.ef16f0bb.chunk.js.map",
     "732.9f97c7f5.chunk.js.map": "/patient-db-manager/static/js/732.9f97c7f5.chunk.js.map",
     "453.8932bc4e.chunk.js.map": "/patient-db-manager/static/js/453.8932bc4e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8e96e44f.css",
-    "static/js/main.86ee3927.js"
+    "static/js/main.9f7d682d.js"
   ]
 }
