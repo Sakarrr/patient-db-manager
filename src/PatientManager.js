@@ -216,7 +216,7 @@ const PatientManager = () => {
   );
 
   const testRanges = {
-    fbs: { min: 70, max: 100 },
+    fbs: { min: 70, max: 110 },
     sgpt: { min: 0, max: 40 },
     sgot: { min: 0, max: 40 },
     cholesterol: { min: 200, max: 240 },
